@@ -16,7 +16,7 @@ public class GameLoop {
 		System.out.println(map.getMapAsText());
 		System.out.println("End");
 
-		//TODO: TEST THIS: THIS IS WHERE YOU LEFT OFF
+		//TODO: TEST THIS after finishing other thingy in ShipManager. WIth the overlapping and stuff
 		ShipManager sm = new ShipManager();
 		sm.placeShip(new Destroyer(0, 0, 2));
 		sm.placeShip(new Cruiser (2, 2, 3));
