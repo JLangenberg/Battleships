@@ -2,6 +2,8 @@ package Functionality;
 
 import gameObjects.Map;
 import gameObjects.ShipManager;
+import ships.Cruiser;
+import ships.Destroyer;
 
 public class GameLoop {
 	//TODO: Make a thing to create your own map and set ships
@@ -16,7 +18,8 @@ public class GameLoop {
 
 		//TODO: TEST THIS: THIS IS WHERE YOU LEFT OFF
 		ShipManager sm = new ShipManager();
-		sm.placeShip();
+		sm.placeShip(new Destroyer(0, 0, 2));
+		sm.placeShip(new Cruiser (2, 2, 3));
 		
 	}
 
