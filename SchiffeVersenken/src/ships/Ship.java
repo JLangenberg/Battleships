@@ -78,7 +78,7 @@ public abstract class Ship {
 		} else {
 			point = new Point(-1, -1);
 		}
-		// TODO:.
+		// TODO:
 		return borderingPoints;
 	}
 
