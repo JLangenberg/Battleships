@@ -37,7 +37,7 @@ public abstract class Ship {
 	/**
 	 * Calculates fields that need to be free for the ship to be placed
 	 */
-	public ArrayList<Point> getIllegalFields() {
+	public ArrayList<Point> getBorderingFields() {
 		// The arrayList all the bordering points will be stored in
 		ArrayList<Point> borderingPoints = new ArrayList<Point>();
 		// Get the point behind the root
