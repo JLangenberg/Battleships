@@ -3,6 +3,7 @@ package gameObjects;
 /**
  * Serves as a storage about information about a single tile of the map.
  * Contains it's state (Unknown/Water/Hit) and handles it
+ * 
  * @author Julius Langenberg, AH811
  *
  */
@@ -19,13 +20,12 @@ public class Field {
 	 * int = 2
 	 */
 	public static final int HIT = 2;
-	
-	
+
 	private int fieldState = Field.UNKNOWN;
-	//TODO: Replace this with "Coordinate"/"point" or whatever we called it object
+
 	private int[] position = new int[2];
-	
-	public String getSymbol()	{
+
+	public String getSymbol() {
 		if (fieldState == Field.UNKNOWN) {
 			return " ";
 		}

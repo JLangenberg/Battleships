@@ -45,12 +45,10 @@ public abstract class Ship {
 		Point pointBehindRootLeft;
 		Point pointBehindRootRight;
 		Point pointFront;
-		//TODO: Remove if not needed
-//		Point pointFrontLeft;
-//		Point pointFrontRight;
+
 		if (direction == 1) {
 			// NORTH
-			
+
 			// The point behind the root, bordering the rear
 			pointBehindRoot = new Point(xRoot, yRoot - 1);
 			// The point on the left of the point behind the root.
@@ -59,11 +57,6 @@ public abstract class Ship {
 			pointBehindRootRight = new Point(xRoot + 1, yRoot - 1);
 			// The point that borders the front end of the ship
 			pointFront = new Point(xRoot, yRoot + length);
-			//TODO: Remove these if they are not needed.
-//			// The point that borders the front end of the ship
-//			pointFrontLeft = new Point(xRoot - 1, yRoot + length);
-//			// The point that borders the front end of the ship
-//			pointFrontRight = new Point(xRoot + 1, yRoot + length);
 
 			for (int i = 1; i < length + 1; i++) {
 				// Get the bordering point in the direction of the ship, left side
@@ -147,13 +140,13 @@ public abstract class Ship {
 			// If no correct direction is given, return null.
 			return null;
 		}
-		
+
 		// Add all the special points to the list
 		borderingPoints.add(pointBehindRoot);
 		borderingPoints.add(pointBehindRootLeft);
 		borderingPoints.add(pointBehindRootRight);
 		borderingPoints.add(pointFront);
-		
+
 		return borderingPoints;
 	}
 
