@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import ships.Ship;
 
 public class ShipManager {
+	// The list of forbidden points no ship should be placed on
 	private ArrayList<Point> forbiddenPoints = new ArrayList<Point>();
 	// TODO: All of this belongs in some kind of config. Make 1 with standard rules,
 	// not changeable and one flexible one Maybe transfer config to other client to
@@ -39,69 +40,53 @@ public class ShipManager {
 			return false;
 		}
 
-		// Check if the type is at a legal spot
-
 		// Get all the points the ship will take up/be placed on
-		ArrayList<Point> points = ship.getShipFields();
+		ArrayList<Point> shipFields = ship.getShipFields();
+		// Get all the points the ship will border and that have to be free (in terms of
+		// other ships).
+		ArrayList<Point> borderingFields = ship.getBorderingFields();
 
-		// Check if all of the taken up points are on the map and on legal points.
-
+		// Check if all of the taken up points are on the map
 		// Loop through all of the points the ship is on
-		for (int i = 0; points.size() > i; i++) {
+		for (int i = 0; shipFields.size() > i; i++) {
 			// Check if the point is on the map
-			if (points.get(i).isOnMap() == false) {
+			if (shipFields.get(i).isOnMap() == false) {
+				// If the ship is not completely on the map, return false.
 				return false;
-			} else {
-				// Check if none of the points are forbidden
-
-				// Loop through all of the forbidden points
-				for (int j = 0; forbiddenPoints.size() > j; j++) {
-					// Get the current forbidden point for better readability
-					Point forbiddenPoint = forbiddenPoints.get(j);
-					Point point = points.get(i);
-					// Check if the current forbiddenPoint equals the current Point
-					if ((point.getX() == forbiddenPoint.getX()) || (point.getY() == forbiddenPoint.getY())) {
-						// If yes, the ship can not be placed.
-						return false;
-					}
-				}
-			}
-		}
-		// Get all the points the ship will border and that have to be free.
-		// TODO Check if the bordering fields are legal too
-		ArrayList<Point> illegalFields = ship.getIllegalFields();
-		// Check if all of the bordering points are on legal points.
-
-		// Loop through all of the points the ship is on
-		for (int i = 0; illegalFields.size() > i; i++) {
-			// Check if the point is on the map
-			if (illegalFields.get(i).isOnMap() == false) {
-				return false;
-			} else {
-				// Check if none of the points are forbidden
-
-				// Loop through all of the forbidden points
-				for (int j = 0; forbiddenPoints.size() > j; j++) {
-					// Get the current forbidden point for better readability
-					Point forbiddenPoint = forbiddenPoints.get(j);
-					Point point = illegalFields.get(i);
-					// Check if the current forbiddenPoint equals the current Point
-					if ((point.getX() == forbiddenPoint.getX()) || (point.getY() == forbiddenPoint.getY())) {
-						// If yes, the ship can not be placed.
-						return false;
-					}
-				}
 			}
 		}
 
-		// TODO: Add forbidden points to list
+		// Check if the ship is on any forbidden points or bordering any fields it
+		// should not be bordering.
+		if (isOverlapping(shipFields, forbiddenPoints) || isOverlapping(borderingFields, forbiddenPoints)) {
+			return false;
+		}
+
+		/*
+		 * If all checks have been passed, add the ships points to the list of forbidden
+		 * points ## for future comparison, count it to the max ship number of its type,
+		 * and save it in the ## ships arrayList.
+		 */
+		// Add shipFields to forbidden points
+		for (int i = 0; i < shipFields.size(); i++) {
+			forbiddenPoints.add(shipFields.get(i));
+		}
+		// Add bordering fields to forbidden points
+		for (int i = 0; i < borderingFields.size(); i++) {
+			forbiddenPoints.add(borderingFields.get(i));
+		}
+		// Add to the number of ships of the current shipType
 		amountOfShips[ship.getShipId()]++;
+		// Add the ship to the list of ships in the game
+		ships.add(ship);
+		// Return true, indicating a successful placement.
 		return true;
 	}
 
 	/**
-	 * Takes in two ArrayLists<Point> and checks if they contain one or more
-	 * points that are the same.
+	 * Takes in two ArrayLists<Point> and checks if they contain one or more points
+	 * that are the same.
+	 * 
 	 * @param pointListA
 	 * @param pointListB
 	 * @return
@@ -115,13 +100,12 @@ public class ShipManager {
 				Point pointA = pointListA.get(j);
 				Point pointB = pointListB.get(i);
 				// Check if the current pointA equals the current PointB
-				if ((pointB.getX() == pointA.getX()) || (pointB.getY() == pointA.getY())) {
+				if ((pointB.getX() == pointA.getX()) && (pointB.getY() == pointA.getY())) {
 					// If yes, theres an overlap
 					return false;
 				}
 			}
 		}
-		///XXX: Finish this/ check if it works again. Then use it in "placeShip" for the bordering and taken up points. Then check if it works. then do the testing.
 
 		return true;
 	}
