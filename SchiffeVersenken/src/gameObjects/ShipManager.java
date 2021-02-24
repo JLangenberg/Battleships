@@ -7,6 +7,11 @@ import ships.Ship;
 public class ShipManager {
 	// The list of forbidden points no ship should be placed on
 	private ArrayList<Point> forbiddenPoints = new ArrayList<Point>();
+	/**
+	 * Stores all ships and their location on the field
+	 */
+	private ArrayList<Ship> ships = new ArrayList<Ship>();
+
 	// TODO: All of this belongs in some kind of config. Make 1 with standard rules,
 	// not changeable and one flexible one Maybe transfer config to other client to
 	// match rules flexibly??
@@ -23,20 +28,13 @@ public class ShipManager {
 	private int amountBattleship = 0;
 	private int[] amountOfShips = new int[] { amountSubmarine, amountDestroyer, amountCruiser, amountBattleship };
 
-	/**
-	 * Stores all ships and their location on the field
-	 */
-	private ArrayList<Ship> ships = new ArrayList<Ship>();
-
 	// TODO: Maybe make it more flexible. Make JSON with 1 object per ship type,
 	// including legalAmount n stuff
 	public boolean placeShip(Ship ship) {
 
 		// Check if this type of ship is still legal.
-		if (legalAmountOfShips[ship.getShipId()] > amountOfShips[ship.getShipId()]) {
-			System.out.println("Ship-type is still available.");
-		} else {
-			System.out.println("Maximum amount of ships of this type reached.");
+		if (legalAmountOfShips[ship.getShipId()] <= amountOfShips[ship.getShipId()]) {
+			System.out.println("Maximum amount of ships of this type reached. ShipID: " + ship.getShipId());
 			return false;
 		}
 
@@ -52,16 +50,17 @@ public class ShipManager {
 			// Check if the point is on the map
 			if (shipFields.get(i).isOnMap() == false) {
 				// If the ship is not completely on the map, return false.
+				System.out.println("Ship is not on map. ShipID: " + ship.getShipId());
 				return false;
 			}
 		}
-
 		// Check if the ship is on any forbidden points or bordering any fields it
 		// should not be bordering.
 		if (isOverlapping(shipFields, forbiddenPoints) || isOverlapping(borderingFields, forbiddenPoints)) {
+			System.out.println("Ship is placed on or bordering on illegal fields. ShipID: " + ship.getShipId());
 			return false;
 		}
-
+		//
 		/*
 		 * If all checks have been passed, add the ships points to the list of forbidden
 		 * points ## for future comparison, count it to the max ship number of its type,
@@ -71,10 +70,8 @@ public class ShipManager {
 		for (int i = 0; i < shipFields.size(); i++) {
 			forbiddenPoints.add(shipFields.get(i));
 		}
-		// Add bordering fields to forbidden points
-		for (int i = 0; i < borderingFields.size(); i++) {
-			forbiddenPoints.add(borderingFields.get(i));
-		}
+
+		System.out.println("Successfully placed ship with ID: " + ship.getShipId());
 		// Add to the number of ships of the current shipType
 		amountOfShips[ship.getShipId()]++;
 		// Add the ship to the list of ships in the game
@@ -102,11 +99,45 @@ public class ShipManager {
 				// Check if the current pointA equals the current PointB
 				if ((pointB.getX() == pointA.getX()) && (pointB.getY() == pointA.getY())) {
 					// If yes, theres an overlap
-					return false;
+					return true;
 				}
 			}
 		}
+		return false;
+	}
 
-		return true;
+	/**
+	 * Draws all ships of the player on this client on a map.
+	 * 
+	 * @return
+	 */
+	public String getShipMap() {
+		int fieldHeight = 10;
+		int fieldWidth = 10;
+
+		String map = "***|0|1|2|3|4|5|6|7|8|9|\n***---------------------\n";
+
+		// Go through all fields of the map
+		for (int y = 0; y < fieldHeight; y++) {
+			map += "**" + y;
+			for (int x = 0; x < fieldWidth; x++) {
+				map += "|";
+				// Check for a ship.
+				boolean foundShip = false;
+				for (int l = 0; l < forbiddenPoints.size(); l++) {
+					if ((forbiddenPoints.get(l).getY()) == y && (forbiddenPoints.get(l).getX() == x)) {
+						foundShip = true;
+						break;
+					}
+				}
+				if (foundShip) {
+					map += "S";
+				} else {
+					map += " ";
+				}
+			}
+			map += "|\n";
+		}
+		return map;
 	}
 }
