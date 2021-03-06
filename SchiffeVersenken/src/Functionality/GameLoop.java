@@ -3,9 +3,13 @@ package Functionality;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.DatagramSocket;
+import java.net.SocketException;
 
 import gameObjects.Map;
 import gameObjects.ShipManager;
+import network.Listener;
+import network.Sender;
 import ships.Battleship;
 import ships.Cruiser;
 import ships.Destroyer;
@@ -24,10 +28,7 @@ public class GameLoop {
 		System.out.println("End");
 
 		ShipManager sm = new ShipManager();
-//		private int legalAmountSubmarine = 4;
-//		private int legalAmountDestroyer = 3;
-//		private int legalAmountCruiser = 2;
-//		private int legalAmountBattleship = 1;
+
 		sm.placeShip(new Destroyer(0, 0, 2));
 		sm.placeShip(new Destroyer(0, 2, 2));
 		sm.placeShip(new Destroyer(0, 4, 2));
@@ -43,9 +44,22 @@ public class GameLoop {
 		sm.placeShip(new Submarine(4, 4, 2));
 
 		System.out.println(sm.getShipMap());
-		// TODO: Now do the communication. Easy, right...?
 
-		System.out.println("Host: 0 \nClient: 1");
+		// Create a datagram socket for both Sender and Listener and create them for the
+		// first time.
+		DatagramSocket ds = null;
+		try {
+			ds = new DatagramSocket(42069);
+		} catch (SocketException e) {
+			e.printStackTrace();
+			System.out.println("Could not create DatagramSocket");
+		}
+		Sender sender = Sender.getSender();
+		sender.setDatagramSocket(ds);
+		Listener listener = Listener.getListener();
+		listener.setDatagramSocket(ds);
+
+		System.out.println("Menu:\nHost: 0 \nClient: 1");
 
 		int choice = 0;
 
@@ -65,5 +79,4 @@ public class GameLoop {
 			System.out.println("Searching for Server");
 		}
 	}
-
 }
