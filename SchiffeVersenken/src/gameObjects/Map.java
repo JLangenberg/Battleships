@@ -28,7 +28,7 @@ public class Map {
 	}
 
 	public String getMapAsText() {
-		String map = "***|A|B|C|D|E|F|G|A|H|I|\n***---------------------\n";
+		String map = "***|A|B|C|D|E|F|G|H|I|J|\n***---------------------\n";
 
 		for (int i = 0; i < fieldHeight; i++) {
 			map += "**" + i;
