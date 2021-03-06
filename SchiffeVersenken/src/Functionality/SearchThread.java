@@ -23,7 +23,8 @@ public class SearchThread implements Runnable {
 
 	@Override
 	public void run() {
-		//XXX: WHEN TESTING: This might be a thing that might not work, never tried it before.
+		// XXX: WHEN TESTING: This might be a thing that might not work, never tried it
+		// before.
 		// Run this loop until a message was received.
 		while (this.message == null) {
 			// Broadcast a message every 8 Seconds.
