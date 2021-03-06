@@ -115,7 +115,7 @@ public class ShipManager {
 		int fieldHeight = 10;
 		int fieldWidth = 10;
 
-		String map = "***|0|1|2|3|4|5|6|7|8|9|\n***---------------------\n";
+		String map = "***|A|B|C|D|E|F|G|H|I|J|\n***---------------------\n";
 
 		// Go through all fields of the map
 		for (int y = 0; y < fieldHeight; y++) {
