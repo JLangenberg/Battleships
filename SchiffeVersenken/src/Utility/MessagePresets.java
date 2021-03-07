@@ -2,6 +2,7 @@ package Utility;
 
 /**
  * Contains all the messages neccessary for communication
+ * 
  * @author Julius Langenberg, AH811
  *
  */
@@ -14,4 +15,5 @@ public class MessagePresets {
 	public static final String MISS = "Miss";
 	public static final String DESTROYED = "Destroyed";
 	public static final String DESTROYEDLASTSHIP = "DestroyedLastShip";
+	public static final String[] SHOTRESPONSES = { HIT, MISS, DESTROYED, DESTROYEDLASTSHIP };
 }
