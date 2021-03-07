@@ -22,7 +22,7 @@ public class Field {
 	public static final int HIT = 2;
 
 	private int fieldState = Field.UNKNOWN;
-
+	//TODO: Replace this with Point object
 	private int[] position = new int[2];
 
 	public String getSymbol() {
