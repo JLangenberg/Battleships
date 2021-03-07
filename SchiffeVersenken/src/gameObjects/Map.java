@@ -26,6 +26,14 @@ public class Map {
 		fields[0][2].setFieldState(Field.WATER);
 		fields[9][9].setFieldState(Field.HIT);
 	}
+	
+	public void setFieldHit(int x, int y)	{
+		fields[x][y].setFieldState(Field.HIT);
+	}
+	
+	public void setFieldWater(int x, int y)	{
+		fields[x][y].setFieldState(Field.WATER);
+	}
 
 	public String getMapAsText() {
 		String map = "***|A|B|C|D|E|F|G|H|I|J|\n***---------------------\n";
