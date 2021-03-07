@@ -12,7 +12,7 @@ public class Shot {
 	public String getX() {
 		return x;
 	}
-
+ 
 	/**
 	 * Returns the y Coordinate as a number for usage in logic.
 	 * 
