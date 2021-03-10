@@ -8,12 +8,13 @@ import java.net.SocketException;
 
 import gameObjects.Map;
 import gameObjects.ShipManager;
+import gameObjects.Shot;
 import network.Listener;
 import network.Sender;
-import ships.Battleship;
-import ships.Cruiser;
-import ships.Destroyer;
-import ships.Submarine;
+import ships.shipTypes.Battleship;
+import ships.shipTypes.Cruiser;
+import ships.shipTypes.Destroyer;
+import ships.shipTypes.Submarine;
 
 public class GameLoop {
 	// TODO: Make a thing to create your own map and set ships
@@ -45,6 +46,9 @@ public class GameLoop {
 
 		System.out.println(sm.getShipMap());
 
+		sm.shootShip(new Shot("F", "0"));
+		sm.shootShip(new Shot("G", "0"));
+
 		// Create a datagram socket for both Sender and Listener and create them for the
 		// first time.
 		DatagramSocket ds = null;
@@ -73,10 +77,15 @@ public class GameLoop {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+
+		GameManager gameManager;
 		if (choice == 0) {
 			System.out.println("Starting Server.");
+			gameManager = new GameManagerHost();
 		} else {
 			System.out.println("Searching for Server");
+			gameManager = new GameManagerClient();
 		}
+		gameManager.establishConnection(map, sm);
 	}
 }

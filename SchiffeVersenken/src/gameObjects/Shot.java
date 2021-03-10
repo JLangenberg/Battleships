@@ -9,10 +9,14 @@ public class Shot {
 		this.y = y;
 	}
 
+	public String getShotAsMessage() {
+		return "[" + x + "]," + "[" + y + "]";
+	}
+
 	public String getX() {
 		return x;
 	}
- 
+
 	/**
 	 * Returns the y Coordinate as a number for usage in logic.
 	 * 

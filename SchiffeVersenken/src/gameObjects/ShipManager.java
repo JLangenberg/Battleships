@@ -4,9 +4,11 @@ import java.util.ArrayList;
 
 import ships.Ship;
 
+//TODO: Handle the whole "ship gets shot" deal. Like keeping track of what is shot, what has been shot, what is sunk, etc...
 public class ShipManager {
-	// The list of forbidden points no ship should be placed on
-	private ArrayList<Point> forbiddenPoints = new ArrayList<Point>();
+	// The list of forbidden points no ship should be placed on, since there is a
+	// ship there.
+	private ArrayList<Point> shipPoints = new ArrayList<Point>();
 	/**
 	 * Stores all ships and their location on the field
 	 */
@@ -27,6 +29,78 @@ public class ShipManager {
 	private int amountCruiser = 0;
 	private int amountBattleship = 0;
 	private int[] amountOfShips = new int[] { amountSubmarine, amountDestroyer, amountCruiser, amountBattleship };
+
+	/**
+	 * 
+	 * @param shotX
+	 * @param shotY
+	 * @return 0 = Water, 1 = Hit, 2 = Destroyed, 3 = DestroyedLastShip
+	 */
+	public int shootShip(Shot shot) {
+
+		// Check if the shot hits
+		boolean shotHits = false;
+		// The point that is currently being compared. After the loop, it contains the
+		// one that is being shot.
+		// Loop through all shitTiles and check if one matches the shot coordinates
+		Point currentPoint;
+		for (int i = 0; i < shipPoints.size(); i++) {
+			// Get the current point
+			currentPoint = shipPoints.get(i);
+			// Check if the coordinates match
+			if ((currentPoint.getX() == shot.getXAsInt()) && (currentPoint.getY() == shot.getYAsInt())) {
+				// If the shot hits, store that info and stop the loop.
+				shotHits = true;
+				break;
+			}
+		}
+
+		if (shotHits) {
+			// Loop through all ships
+			for (int i = 0; i < ships.size(); i++) {
+				// Check if the current ship has a tile at the place that is being targeted
+				if (ships.get(i).hasTileAtPoint(shot.getXAsInt(), shot.getYAsInt())) {
+					// If yes, set the corresponding tile of this ship to hit
+					Ship shotShip = ships.get(i);
+					// "Shoot" the ship and get whether or not it was sunk.
+					boolean isDestroyed = shotShip.shootShip(shot.getXAsInt(), shot.getYAsInt());
+					// If a ship was destroyed, check if it was the last one. If not, just return
+					// the int for "Destroyed"
+					if (isDestroyed) {
+						// If all ships are sunk, return "DestroyedLastShip" equivalent.
+						if (isAllSunk()) {
+							return 3;
+						}
+						// If there are other ships left, just return Destroyed
+						return 2;
+					}
+					// If the ship was not destroyed, just return Hit
+					return 1;
+				}
+			}
+		}
+		// If the shot doesn't hit, return a Miss/Water
+		return 0;
+	}
+
+	/**
+	 * Checks if all ships are sunk or if there are still some left.
+	 * 
+	 * @return true = All ships sunk, false = ships not sunk
+	 */
+	private boolean isAllSunk() {
+		// The boolean that indicates if all ships are sunk or not
+		boolean allSunk = true;
+		// Loop through all ships and check if they are sunk.
+		for (int i = 0; i < ships.size(); i++) {
+			// If there is a ship that is not sunk, set allSunk = false.
+			if (ships.get(i).isSunk() == false) {
+				allSunk = false;
+				break;
+			}
+		}
+		return allSunk;
+	}
 
 	// TODO: Maybe make it more flexible. Make JSON with 1 object per ship type,
 	// including legalAmount n stuff
@@ -56,7 +130,7 @@ public class ShipManager {
 		}
 		// Check if the ship is on any forbidden points or bordering any fields it
 		// should not be bordering.
-		if (isOverlapping(shipFields, forbiddenPoints) || isOverlapping(borderingFields, forbiddenPoints)) {
+		if (isOverlapping(shipFields, shipPoints) || isOverlapping(borderingFields, shipPoints)) {
 			System.out.println("Ship is placed on or bordering on illegal fields. ShipID: " + ship.getShipId());
 			return false;
 		}
@@ -68,7 +142,7 @@ public class ShipManager {
 		 */
 		// Add shipFields to forbidden points
 		for (int i = 0; i < shipFields.size(); i++) {
-			forbiddenPoints.add(shipFields.get(i));
+			shipPoints.add(shipFields.get(i));
 		}
 
 		System.out.println("Successfully placed ship with ID: " + ship.getShipId());
@@ -124,8 +198,8 @@ public class ShipManager {
 				map += "|";
 				// Check for a ship.
 				boolean foundShip = false;
-				for (int l = 0; l < forbiddenPoints.size(); l++) {
-					if ((forbiddenPoints.get(l).getY()) == y && (forbiddenPoints.get(l).getX() == x)) {
+				for (int l = 0; l < shipPoints.size(); l++) {
+					if ((shipPoints.get(l).getY()) == y && (shipPoints.get(l).getX() == x)) {
 						foundShip = true;
 						break;
 					}

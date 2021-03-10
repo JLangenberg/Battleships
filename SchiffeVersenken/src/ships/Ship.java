@@ -33,6 +33,14 @@ public abstract class Ship {
 	 * The id of the ship
 	 */
 	protected int shipId;
+	/**
+	 * ArrayList that stores all of the ships tiles.
+	 */
+	protected ArrayList<ShipTile> shipTiles = new ArrayList<ShipTile>();
+	/**
+	 * Boolean that indicates whether or not the ship is sunk or not.
+	 */
+	protected boolean isSunk = false;
 
 	/**
 	 * Calculates fields that need to be free for the ship to be placed
@@ -177,8 +185,59 @@ public abstract class Ship {
 			// Add the calculated point to the arrayList
 			shipPoints.add(point);
 		}
+
+		// Delete the old shipTiles in case this method gets called more than once
+		shipTiles = new ArrayList<ShipTile>();
+		// Add all the points to the shipTiles ArrayList.
+		for (int i = 0; i < shipPoints.size(); i++) {
+			Point currentPoint = shipPoints.get(i);
+			shipTiles.add(new ShipTile(currentPoint.getX(), currentPoint.getY()));
+		}
 		// Return the calculated points for later usage
 		return shipPoints;
+	}
+
+	public void updateIsSunk() {
+		boolean sunk = true;
+		for (int i = 0; i < shipTiles.size(); i++) {
+			if (shipTiles.get(i).getState() == ShipTile.NOTHIT) {
+				sunk = false;
+			}
+		}
+		this.isSunk = sunk;
+	}
+
+	public boolean hasTileAtPoint(int x, int y) {
+		for (int i = 0; i < shipTiles.size(); i++) {
+			ShipTile currentTile = shipTiles.get(i);
+			if ((currentTile.getxCoordinate() == x) && (currentTile.getxCoordinate() == y)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Shoot a ship at a coordinate. Sets the according tile to "HIT" Returns
+	 * whether or not the ship was destroyed.
+	 * 
+	 * @param x of the shipTile that is being shot at
+	 * @param y the shipTile that is being shot at
+	 * @return false = Ship did not sink, true = Ship is sunk
+	 */
+	public boolean shootShip(int x, int y) {
+		// Loop through all tiles to find the one that is being targeted
+		for (int i = 0; i < shipTiles.size(); i++) {
+			ShipTile currentTile = shipTiles.get(i);
+			// Check if it is the current tile.
+			if ((currentTile.getxCoordinate() == x) && (currentTile.getxCoordinate() == y)) {
+				// Set the state of the targeted tile to "HIT"
+				currentTile.setState(ShipTile.HIT);
+				// Update the 'sunk' state.
+				updateIsSunk();
+			}
+		}
+		return this.isSunk;
 	}
 
 	public int getxRoot() {
@@ -219,5 +278,21 @@ public abstract class Ship {
 
 	public void setShipId(int shipId) {
 		this.shipId = shipId;
+	}
+
+	public ArrayList<ShipTile> getShipTiles() {
+		return shipTiles;
+	}
+
+	public void setShipTiles(ArrayList<ShipTile> shipTiles) {
+		this.shipTiles = shipTiles;
+	}
+
+	public boolean isSunk() {
+		return isSunk;
+	}
+
+	public void setSunk(boolean isSunk) {
+		this.isSunk = isSunk;
 	}
 }

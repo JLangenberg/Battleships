@@ -86,6 +86,30 @@ public class Listener {
 		}
 	}
 
+	/**
+	 * Listens for a message by a specific sender and hands it to the UI or
+	 * something...
+	 */
+	public Message listenForKeyword(String keyword, InetAddress sender) {
+		// A loop that only ends when a relevant message was heard.
+		while (true) {
+			// Receive a packet
+			DatagramPacket datagramPacket = getPackage();
+			// Check if it contains the keyword
+			boolean containsKeyword = containsKeyword(datagramPacket, keyword);
+
+			// Check if the received message contains keywords and is sent by the wanted
+			// client
+			if (containsKeyword && isSentBySender(datagramPacket, sender)) {
+				System.out.println("Message got:\n");
+				System.out.println(datagramPacket.getData());
+				System.out.println(datagramPacket.getAddress().toString());
+				// Returns the received message
+				return new Message(datagramPacket.getAddress(), datagramPacket.getData().toString());
+			}
+		}
+	}
+
 	private boolean containsKeyword(DatagramPacket datagramPacket, String keyword) {
 		// Check the sender of this message, get all the data needed
 		InetAddress senderAddress = datagramPacket.getAddress();

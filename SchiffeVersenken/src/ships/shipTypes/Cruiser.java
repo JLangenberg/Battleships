@@ -1,4 +1,6 @@
-package ships;
+package ships.shipTypes;
+
+import ships.Ship;
 
 public class Cruiser extends Ship {
 	public Cruiser(int xRoot, int yRoot, int direction) {

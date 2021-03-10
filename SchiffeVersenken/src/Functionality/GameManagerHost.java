@@ -23,10 +23,12 @@ public class GameManagerHost extends GameManager {
 		// Starts the broadcast. Will stop when message != null.
 		searchThread.start();
 		// Listen for responses. Stops here until fitting response was found.
-		message = Listener.getListener().listenForKeyword(MessagePresets.SEARCHV1);
+		message = Listener.getListener().listenForKeyword(MessagePresets.FOUND);
 		// Notify the client that we want to play
 		Sender.getSender().sendMessage(message.getSender(), MessagePresets.ACK);
 		// Save the address of the opponent for later usage.
 		opponentAddress = message.getSender();
+		// When everything is set up, shoot the first shot
+		fireShot();
 	}
 }

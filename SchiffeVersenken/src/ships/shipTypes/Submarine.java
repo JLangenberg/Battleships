@@ -1,4 +1,6 @@
-package ships;
+package ships.shipTypes;
+
+import ships.Ship;
 
 public class Submarine extends Ship {
 	

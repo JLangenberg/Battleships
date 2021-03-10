@@ -1,4 +1,6 @@
-package ships;
+package ships.shipTypes;
+
+import ships.Ship;
 
 public class Destroyer extends Ship{
 	public Destroyer(int xRoot, int yRoot, int direction)	{

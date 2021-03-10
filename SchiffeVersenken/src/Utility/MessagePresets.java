@@ -7,7 +7,7 @@ package Utility;
  *
  */
 public class MessagePresets {
-	public static final String SEARCHV1 = "SVSearch,[1]";
+	public static final String SEARCHV1 = "SVSearch,[1.0]";
 	public static final String FOUND = "SVFound";
 	public static final String ACK = "SVAck";
 	public static final String FIRE = "Fire";

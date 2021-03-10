@@ -9,13 +9,13 @@ import Utility.Config;
 
 public class Sender {
 
-	private boolean hasConnection = false;
 	public static final int PORT = 42069;
 	private static volatile Sender sender;
 
 	private DatagramSocket datagramSocket;
 
-	private Sender() {}
+	private Sender() {
+	}
 
 	public DatagramSocket getDatagramSocket() {
 		return datagramSocket;
@@ -76,13 +76,5 @@ public class Sender {
 			}
 		}
 		return sender;
-	}
-
-	public boolean isHasConnection() {
-		return hasConnection;
-	}
-
-	public void setHasConnection(boolean hasConnection) {
-		this.hasConnection = hasConnection;
 	}
 }

@@ -1,4 +1,6 @@
-package ships;
+package ships.shipTypes;
+
+import ships.Ship;
 
 public class Battleship extends Ship{
 	public Battleship(int xRoot, int yRoot, int direction)	{

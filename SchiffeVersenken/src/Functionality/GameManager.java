@@ -24,12 +24,12 @@ public abstract class GameManager {
 
 	public abstract void establishConnection(Map map, ShipManager sm);
 
-	private void fireShot() {
+	protected void fireShot() {
 		// Let the user input where to shoot
 		Shot shot = getShotLocation();
 		// If a valid shot was entered, tell the user input was ok and shoot.
 		System.out.println("Got it. Shooting at " + shot.getX() + shot.getY());
-		///XXX: Debug message.
+		/// XXX: Debug message.
 		System.out.println("Sending: " + MessagePresets.FIRE + ",[" + shot.getX() + "],[" + shot.getY() + "]");
 		// Tell the opponent where you're shooting.
 		Sender.getSender().sendMessage(opponentAddress,
@@ -89,8 +89,62 @@ public abstract class GameManager {
 
 	}
 
-	private void getEnemyShot() {
-		//TODO:XXX:DOTHISHEY Get the enemy shot and act accordingly.
+	protected void getEnemyShot() {
+		// TODO: Make/Take method that only receives from opponent.
+		Message shotMessage = Listener.getListener().listenForKeyword(MessagePresets.FIRE, opponentAddress);
+		// Extract the target coordinate from the message
+		Shot shot = getShotFromMessage(shotMessage.getContent());
+		// Shoot the shot at the ship.
+		int response = sm.shootShip(shot);
+		if (response == 0) {
+			// Say miss and shoot own shot
+			System.out.println("Incoming shot missed. " + shot.getShotAsMessage());
+			Sender.getSender().sendMessage(opponentAddress, MessagePresets.MISS + "," + shot.getShotAsMessage());
+			fireShot();
+		} else if (response == 1) {
+			// Say hit and wait for next shot
+			System.out.println("Hit! " + shot.getShotAsMessage() + " Waiting for next shot.");
+			Sender.getSender().sendMessage(opponentAddress, MessagePresets.HIT + "," + shot.getShotAsMessage());
+			getEnemyShot();
+		} else if (response == 2) {
+			// say destroyed and wait for next shot
+			System.out.println("Hit! " + shot.getShotAsMessage() + " Waiting for next shot.");
+			Sender.getSender().sendMessage(opponentAddress, MessagePresets.DESTROYED + "," + shot.getShotAsMessage());
+			getEnemyShot();
+		} else if (response == 3) {
+			// say destroyed last ship and do game over.
+			Sender.getSender().sendMessage(opponentAddress,
+					MessagePresets.DESTROYEDLASTSHIP + "," + shot.getShotAsMessage());
+			System.out.println("Hit! " + shot.getShotAsMessage() + " Last Ship was destroyed. \nYou lost!");
+
+		}
+	}
+
+	private Shot getShotFromMessage(String message) {
+		CharSequence[] xCoordinates = { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J" };
+		CharSequence[] yCoordinates = { "0", "1", "2", "3", "4", "5", "6", "7", "8", "9" };
+
+		String shotX;
+		String shotY;
+
+		// Reset variables
+		shotX = "default";
+		shotY = "default";
+
+		// Check if input is legal
+		// Check if the message contains a valid x Coordinate.
+		for (int i = 0; i < xCoordinates.length; i++) {
+			if (message.contains(",[" + xCoordinates[i] + "]")) {
+				shotX = xCoordinates[i].toString();
+			}
+		}
+		// Check if the message contains a valid y Coordinate.
+		for (int i = 0; i < yCoordinates.length; i++) {
+			if (message.contains(",[" + yCoordinates[i] + "]")) {
+				shotY = yCoordinates[i].toString();
+			}
+		}
+		return new Shot(shotX, shotY);
 	}
 
 	// TODO: Put this into a seperate UI class.

@@ -14,7 +14,7 @@ import network.Sender;
 public class SearchThread implements Runnable {
 
 	private boolean keepRunning = true;
-	Message message = null;
+	volatile Message message = null;
 
 	public SearchThread(Message message) {
 		// Get the object that will contain the SVFound once it was received.
