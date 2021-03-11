@@ -3,9 +3,9 @@ package Functionality;
 import Utility.MessagePresets;
 import gameObjects.Map;
 import gameObjects.ShipManager;
-import network.Listener;
+import network.ListenerUDP;
 import network.Message;
-import network.Sender;
+import network.SenderUDP;
 
 public class GameManagerClient extends GameManager {
 	
@@ -14,13 +14,14 @@ public class GameManagerClient extends GameManager {
 		// Get the ShipManager and the Map for the following game.
 		this.map = map;
 		this.sm = sm;
-		
+		System.out.println("Client mode");
 		// Listen for hosts searching a game. Stops here until fitting response was found.
-		Message message = Listener.getListener().listenForKeyword(MessagePresets.SEARCHV1);
+		Message message = ListenerUDP.getListener().listenForKeyword(MessagePresets.SEARCHV1);
 		// Notify the host that we want to play
-		Sender.getSender().sendMessage(message.getSender(), MessagePresets.FOUND);
+		SenderUDP.getSender().sendMessage(message.getSender(), MessagePresets.FOUND);
 		// Wait for acknowledgement
-		Listener.getListener().listenForKeyword(MessagePresets.ACK);
+		ListenerUDP.getListener().listenForKeyword(MessagePresets.ACK);
+		System.out.println("Got Opponent. Game starting.");
 		// Save the address of the opponent for later usage.
 		opponentAddress = message.getSender();
 		// When everything is set, wait for the first shot.

@@ -2,7 +2,7 @@ package Functionality;
 
 import Utility.MessagePresets;
 import network.Message;
-import network.Sender;
+import network.SenderUDP;
 
 /**
  * Simple thread that continuously broadcasts a "searching game" message until
@@ -23,12 +23,10 @@ public class SearchThread implements Runnable {
 
 	@Override
 	public void run() {
-		// XXX: WHEN TESTING: This might be a thing that might not work, never tried it
-		// before.
 		// Run this loop until a message was received.
-		while (this.message == null) {
+		while (this.message.getContent().equals("Run")) {
 			// Broadcast a message every 8 Seconds.
-			Sender sender = Sender.getSender();
+			SenderUDP sender = SenderUDP.getSender();
 			sender.broadcastMessage(MessagePresets.SEARCHV1);
 			System.out.println("Searching...");
 			try {

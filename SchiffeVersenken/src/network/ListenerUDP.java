@@ -6,21 +6,21 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-public class Listener {
+public class ListenerUDP {
 
 	private DatagramSocket datagramSocket;
 	InetAddress ownAddress = null;
-	private static volatile Listener listener;
+	private static volatile ListenerUDP listener;
 
-	public Listener() {
+	public ListenerUDP() {
 	}
 
-	public static Listener getListener() {
+	public static ListenerUDP getListener() {
 
 		if (listener == null) {
-			synchronized (Listener.class) {
+			synchronized (ListenerUDP.class) {
 				if (listener == null) {
-					listener = new Listener();
+					listener = new ListenerUDP();
 				}
 			}
 		}
@@ -71,15 +71,9 @@ public class Listener {
 			DatagramPacket datagramPacket = getPackage();
 			// Check if it contains the keyword
 			boolean containsKeyword = containsKeyword(datagramPacket, keyword);
-
 			// Check if the received message contains keywords and is not send by the client
 			// itself.
-			// XXX: the self-check might not be needed if not speaking and listening at the
-			// same time.
 			if (containsKeyword) {
-				System.out.println("Message got:\n");
-				System.out.println(datagramPacket.getData());
-				System.out.println(datagramPacket.getAddress().toString());
 				// Returns the received message
 				return new Message(datagramPacket.getAddress(), datagramPacket.getData().toString());
 			}
@@ -97,13 +91,9 @@ public class Listener {
 			DatagramPacket datagramPacket = getPackage();
 			// Check if it contains the keyword
 			boolean containsKeyword = containsKeyword(datagramPacket, keyword);
-
 			// Check if the received message contains keywords and is sent by the wanted
 			// client
 			if (containsKeyword && isSentBySender(datagramPacket, sender)) {
-				System.out.println("Message got:\n");
-				System.out.println(datagramPacket.getData());
-				System.out.println(datagramPacket.getAddress().toString());
 				// Returns the received message
 				return new Message(datagramPacket.getAddress(), datagramPacket.getData().toString());
 			}
@@ -111,17 +101,11 @@ public class Listener {
 	}
 
 	private boolean containsKeyword(DatagramPacket datagramPacket, String keyword) {
-		// Check the sender of this message, get all the data needed
-		InetAddress senderAddress = datagramPacket.getAddress();
 		// Get the contents of the message
 		String message = new String(datagramPacket.getData());
 
-		// Check if the received message contains keywords and is not send by this
-		// client
-		// itself.
-		// XXX: the self-check might not be needed if not speaking and listening at the
-		// same time.
-		if (message.contains(keyword) && !(senderAddress.toString().contains(ownAddress.toString()))) {
+		// Check if the received message contains keywords itself.
+		if (message.contains(keyword)) {
 			return true;
 		}
 		return false;

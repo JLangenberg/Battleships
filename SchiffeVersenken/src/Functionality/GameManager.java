@@ -9,9 +9,10 @@ import Utility.MessagePresets;
 import gameObjects.Map;
 import gameObjects.ShipManager;
 import gameObjects.Shot;
-import network.Listener;
+import network.ListenerUDP;
 import network.Message;
-import network.Sender;
+import network.SenderUDP;
+import network.SocketConnection;
 
 //TODO: You could do an anti-cheating thing. Like when you destroyed more ships than there should be, do a notification or something.
 public abstract class GameManager {
@@ -21,6 +22,8 @@ public abstract class GameManager {
 	Map map;
 	// The address to send the messages to when playing
 	InetAddress opponentAddress;
+	// The connection to communicate with when the initial communication has been finished.
+	SocketConnection connection;
 
 	public abstract void establishConnection(Map map, ShipManager sm);
 
@@ -32,15 +35,15 @@ public abstract class GameManager {
 		/// XXX: Debug message.
 		System.out.println("Sending: " + MessagePresets.FIRE + ",[" + shot.getX() + "],[" + shot.getY() + "]");
 		// Tell the opponent where you're shooting.
-		Sender.getSender().sendMessage(opponentAddress,
-				MessagePresets.FIRE + ",[" + shot.getX() + "],[" + shot.getY() + "]");
+		SenderUDP.getSender().sendMessage(opponentAddress,
+				MessagePresets.FIRE + ",[" + shot.getX() + "],[" + shot.getY() + "]\n");
 		// Wait for opponents response
 		getShotFeedback(shot);
 	}
 
 	private void getShotFeedback(Shot shot) {
 		// Get the response of the opponents client.
-		Message response = Listener.getListener().listenForKeywords(MessagePresets.SHOTRESPONSES, opponentAddress);
+		Message response = ListenerUDP.getListener().listenForKeywords(MessagePresets.SHOTRESPONSES, opponentAddress);
 
 		// When the shot hit, update the map, notify the user and shoot again.
 		if (response.getContent().contains(MessagePresets.HIT)) {
@@ -91,7 +94,8 @@ public abstract class GameManager {
 
 	protected void getEnemyShot() {
 		// TODO: Make/Take method that only receives from opponent.
-		Message shotMessage = Listener.getListener().listenForKeyword(MessagePresets.FIRE, opponentAddress);
+		Message shotMessage = ListenerUDP.getListener().listenForKeyword(MessagePresets.FIRE, opponentAddress);
+		System.out.println("Got shot");
 		// Extract the target coordinate from the message
 		Shot shot = getShotFromMessage(shotMessage.getContent());
 		// Shoot the shot at the ship.
@@ -99,24 +103,23 @@ public abstract class GameManager {
 		if (response == 0) {
 			// Say miss and shoot own shot
 			System.out.println("Incoming shot missed. " + shot.getShotAsMessage());
-			Sender.getSender().sendMessage(opponentAddress, MessagePresets.MISS + "," + shot.getShotAsMessage());
+			SenderUDP.getSender().sendMessage(opponentAddress, MessagePresets.MISS + "," + shot.getShotAsMessage());
 			fireShot();
 		} else if (response == 1) {
 			// Say hit and wait for next shot
 			System.out.println("Hit! " + shot.getShotAsMessage() + " Waiting for next shot.");
-			Sender.getSender().sendMessage(opponentAddress, MessagePresets.HIT + "," + shot.getShotAsMessage());
+			SenderUDP.getSender().sendMessage(opponentAddress, MessagePresets.HIT + "," + shot.getShotAsMessage());
 			getEnemyShot();
 		} else if (response == 2) {
 			// say destroyed and wait for next shot
 			System.out.println("Hit! " + shot.getShotAsMessage() + " Waiting for next shot.");
-			Sender.getSender().sendMessage(opponentAddress, MessagePresets.DESTROYED + "," + shot.getShotAsMessage());
+			SenderUDP.getSender().sendMessage(opponentAddress, MessagePresets.DESTROYED + "," + shot.getShotAsMessage());
 			getEnemyShot();
 		} else if (response == 3) {
 			// say destroyed last ship and do game over.
-			Sender.getSender().sendMessage(opponentAddress,
+			SenderUDP.getSender().sendMessage(opponentAddress,
 					MessagePresets.DESTROYEDLASTSHIP + "," + shot.getShotAsMessage());
 			System.out.println("Hit! " + shot.getShotAsMessage() + " Last Ship was destroyed. \nYou lost!");
-
 		}
 	}
 

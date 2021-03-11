@@ -9,8 +9,8 @@ import java.net.SocketException;
 import gameObjects.Map;
 import gameObjects.ShipManager;
 import gameObjects.Shot;
-import network.Listener;
-import network.Sender;
+import network.ListenerUDP;
+import network.SenderUDP;
 import ships.shipTypes.Battleship;
 import ships.shipTypes.Cruiser;
 import ships.shipTypes.Destroyer;
@@ -58,9 +58,9 @@ public class GameLoop {
 			e.printStackTrace();
 			System.out.println("Could not create DatagramSocket");
 		}
-		Sender sender = Sender.getSender();
+		SenderUDP sender = SenderUDP.getSender();
 		sender.setDatagramSocket(ds);
-		Listener listener = Listener.getListener();
+		ListenerUDP listener = ListenerUDP.getListener();
 		listener.setDatagramSocket(ds);
 
 		System.out.println("Menu:\nHost: 0 \nClient: 1");

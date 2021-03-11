@@ -7,14 +7,14 @@ import java.net.InetAddress;
 
 import Utility.Config;
 
-public class Sender {
+public class SenderUDP {
 
 	public static final int PORT = 42069;
-	private static volatile Sender sender;
+	private static volatile SenderUDP sender;
 
 	private DatagramSocket datagramSocket;
 
-	private Sender() {
+	private SenderUDP() {
 	}
 
 	public DatagramSocket getDatagramSocket() {
@@ -66,12 +66,12 @@ public class Sender {
 		}
 	}
 
-	public static Sender getSender() {
+	public static SenderUDP getSender() {
 
 		if (sender == null) {
-			synchronized (Sender.class) {
+			synchronized (SenderUDP.class) {
 				if (sender == null) {
-					sender = new Sender();
+					sender = new SenderUDP();
 				}
 			}
 		}
