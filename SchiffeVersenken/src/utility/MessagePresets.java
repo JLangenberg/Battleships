@@ -1,4 +1,4 @@
-package Utility;
+package utility;
 
 /**
  * Contains all the messages neccessary for communication

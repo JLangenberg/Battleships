@@ -1,8 +1,8 @@
-package Functionality;
+package functionality;
 
-import Utility.MessagePresets;
 import network.Message;
 import network.SenderUDP;
+import utility.MessagePresets;
 
 /**
  * Simple thread that continuously broadcasts a "searching game" message until

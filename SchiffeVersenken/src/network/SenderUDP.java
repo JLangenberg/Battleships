@@ -5,7 +5,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
-import Utility.Config;
+import utility.Config;
 
 public class SenderUDP {
 
