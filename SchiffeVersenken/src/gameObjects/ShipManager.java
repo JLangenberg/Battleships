@@ -191,7 +191,7 @@ public class ShipManager {
 				for (int l = 0; l < shipPoints.size(); l++) {
 					if ((shipPoints.get(l).getY()) == y && (shipPoints.get(l).getX() == x)) {
 						foundShip = true;
-						getStateOfTileAt(x, y);
+						tileState = getStateOfTileAt(x, y);
 						break;
 					}
 				}
