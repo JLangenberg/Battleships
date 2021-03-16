@@ -53,7 +53,7 @@ public abstract class Ship {
 		Point pointBehindRootLeft;
 		Point pointBehindRootRight;
 		Point pointFront;
-		//TODO: Put these things into separate methods maybe?
+		// TODO: Put these things into separate methods maybe?
 		if (direction == 1) {
 			// NORTH
 
@@ -234,6 +234,28 @@ public abstract class Ship {
 		}
 		// If no match was found, return false
 		return false;
+	}
+
+	/**
+	 * Returns the state of a tile at a point
+	 * 
+	 * @param x coordinate of the tile
+	 * @param y coordinate of the tile
+	 * @return The state of a tile at [x,y]. 0 = Not hit, 1 = hit
+	 */
+	public int getTileStateAtPoint(int x, int y) {
+		// Loop through all tiles
+		for (int i = 0; i < shipTiles.size(); i++) {
+			// Get the current tile
+			ShipTile currentTile = shipTiles.get(i);
+			// Check if it is at the wanted coordinates
+			if ((currentTile.getxCoordinate() == x) && (currentTile.getyCoordinate() == y)) {
+				// If yes, return true
+				return currentTile.getState();
+			}
+		}
+		// If no match was found, return a default of 0.
+		return 0;
 	}
 
 	/**

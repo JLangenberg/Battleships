@@ -177,7 +177,7 @@ public class ShipManager {
 	public String getShipMap() {
 		int fieldHeight = 10;
 		int fieldWidth = 10;
-		// TODO: Show where your ships have been hit
+
 		String map = "***|0|1|2|3|4|5|6|7|8|9|\n***|A|B|C|D|E|F|G|H|I|J|\n***---------------------\n";
 
 		// Go through all fields of the map
@@ -187,14 +187,20 @@ public class ShipManager {
 				map += "|";
 				// Check for a ship.
 				boolean foundShip = false;
+				int tileState = 0;
 				for (int l = 0; l < shipPoints.size(); l++) {
 					if ((shipPoints.get(l).getY()) == y && (shipPoints.get(l).getX() == x)) {
 						foundShip = true;
+						getStateOfTileAt(x, y);
 						break;
 					}
 				}
 				if (foundShip) {
-					map += "S";
+					if (tileState == 1) {
+						map += "+";
+					} else {
+						map += "S";
+					}
 				} else {
 					map += " ";
 				}
@@ -202,5 +208,25 @@ public class ShipManager {
 			map += "|\n";
 		}
 		return map;
+	}
+
+	/**
+	 * Get whether or not a tile at a the handed coordinates has been hit or not.
+	 * 
+	 * @param x The x Coordinates to check
+	 * @param y The y Coordinates to check
+	 * @return Whether or not the tile has been hit. 0 = Not hit, 1 = hit.
+	 */
+	private int getStateOfTileAt(int x, int y) {
+		// Loop through all ships
+		for (int i = 0; i < ships.size(); i++) {
+			// Check if the current ship has the wanted tile
+			if (ships.get(i).hasTileAtPoint(x, y)) {
+				// If it does, return its state
+				return ships.get(i).getTileStateAtPoint(x, y);
+			}
+		}
+		// If nothing was found, default to 0.
+		return 0;
 	}
 }
