@@ -3,8 +3,8 @@ package gameObjects;
 import java.util.ArrayList;
 
 import ships.Ship;
+import utility.Config;
 
-//TODO: Handle the whole "ship gets shot" deal. Like keeping track of what is shot, what has been shot, what is sunk, etc...
 public class ShipManager {
 	// The list of forbidden points no ship should be placed on, since there is a
 	// ship there.
@@ -14,21 +14,13 @@ public class ShipManager {
 	 */
 	private ArrayList<Ship> ships = new ArrayList<Ship>();
 
-	// TODO: All of this belongs in some kind of config. Make 1 with standard rules,
-	// not changeable and one flexible one Maybe transfer config to other client to
-	// match rules flexibly??
-	private int legalAmountSubmarine = 4;
-	private int legalAmountDestroyer = 3;
-	private int legalAmountCruiser = 2;
-	private int legalAmountBattleship = 1;
-	private int[] legalAmountOfShips = new int[] { legalAmountSubmarine, legalAmountDestroyer, legalAmountCruiser,
-			legalAmountBattleship };
+	// The legal amount of ships of a type. Index: 0 = submarine, 1 = destroyer, 2 =
+	// cruiser, 3 = battleship
+	private int[] legalAmountOfShips = Config.legalAmountOfShips;
 
-	private int amountSubmarine = 0;
-	private int amountDestroyer = 0;
-	private int amountCruiser = 0;
-	private int amountBattleship = 0;
-	private int[] amountOfShips = new int[] { amountSubmarine, amountDestroyer, amountCruiser, amountBattleship };
+	// Keeps track of the current amount of ships placed. Index: 0 = submarine, 1 =
+	// destroyer, 2 = cruiser, 3 = battleship
+	private int[] amountOfShips = new int[] { 0, 0, 0, 0 };
 
 	/**
 	 * 
@@ -102,8 +94,6 @@ public class ShipManager {
 		return allSunk;
 	}
 
-	// TODO: Maybe make it more flexible. Make JSON with 1 object per ship type,
-	// including legalAmount n stuff
 	public boolean placeShip(Ship ship) {
 
 		// Check if this type of ship is still legal.

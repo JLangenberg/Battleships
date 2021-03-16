@@ -6,4 +6,7 @@ public class Config {
 	public static final int AMOUNTDESTROYER = 3;
 	public static final int AMOUNTCRUISER = 2;
 	public static final int AMOUNTBATTLESHIP = 1;
+
+	public static final int[] legalAmountOfShips = new int[] { AMOUNTSUBMARINE, AMOUNTDESTROYER, AMOUNTCRUISER,
+			AMOUNTBATTLESHIP };
 }

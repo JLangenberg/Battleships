@@ -34,8 +34,6 @@ public class ListenerUDP {
 	public void setDatagramSocket(DatagramSocket datagramSocket) {
 		this.datagramSocket = datagramSocket;
 		// Get the clients own address to filter out own messages.
-		// XXX: Might not be needed if you are not sending and listening at the same
-		// time.
 		try {
 			ownAddress = InetAddress.getLocalHost();
 		} catch (UnknownHostException e) {
@@ -120,8 +118,6 @@ public class ListenerUDP {
 		// Check if the received message contains keywords and is not send by this
 		// client
 		// itself.
-		// XXX: the self-check might not be needed if not speaking and listening at the
-		// same time.
 		for (int i = 0; i < keywords.length; i++) {
 			if (message.contains(keywords[i]) && !(senderAddress.toString().contains(ownAddress.toString()))) {
 				return true;
@@ -149,8 +145,6 @@ public class ListenerUDP {
 
 			// Check if the received message contains keywords and is not send by the client
 			// itself.
-			// XXX: the self-check might not be needed if not speaking and listening at the
-			// same time.
 			if (containsKeyword && isFromSender) {
 				System.out.println("Message got:\n");
 				System.out.println(datagramPacket.getData());
@@ -166,17 +160,5 @@ public class ListenerUDP {
 			return true;
 		}
 		return false;
-	}
-
-	/**
-	 * Method listens for a list of keywords and returns the message.
-	 * 
-	 * @param keywords The keywords to filter for
-	 * @return The received message
-	 */
-	public Message listenForKeywords(String[] keywords) {
-		// TODO: Finish this method.
-		return null;
-
 	}
 }
