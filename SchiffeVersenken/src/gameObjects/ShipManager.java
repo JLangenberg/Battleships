@@ -177,7 +177,7 @@ public class ShipManager {
 	public String getShipMap() {
 		int fieldHeight = 10;
 		int fieldWidth = 10;
-
+		// TODO: Show where your ships have been hit
 		String map = "***|0|1|2|3|4|5|6|7|8|9|\n***|A|B|C|D|E|F|G|H|I|J|\n***---------------------\n";
 
 		// Go through all fields of the map
