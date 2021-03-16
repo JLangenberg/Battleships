@@ -168,7 +168,7 @@ public abstract class Ship {
 		// Add the root of the ship to the list of forbidden coordinates
 		shipPoints.add(new Point(xRoot, yRoot));
 		// Get all of the fields the ship is on
-		for (int i = 0; i < length; i++) {
+		for (int i = 1; i < length; i++) {
 			// Current point to add
 			Point point;
 			if (direction == 1) {
@@ -227,7 +227,7 @@ public abstract class Ship {
 			// Get the current tile
 			ShipTile currentTile = shipTiles.get(i);
 			// Check if it is at the wanted coordinates
-			if ((currentTile.getxCoordinate() == x) && (currentTile.getxCoordinate() == y)) {
+			if ((currentTile.getxCoordinate() == x) && (currentTile.getyCoordinate() == y)) {
 				// If yes, return true
 				return true;
 			}
