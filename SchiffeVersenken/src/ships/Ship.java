@@ -249,7 +249,7 @@ public abstract class Ship {
 		for (int i = 0; i < shipTiles.size(); i++) {
 			ShipTile currentTile = shipTiles.get(i);
 			// Check if it is the current tile.
-			if ((currentTile.getxCoordinate() == x) && (currentTile.getxCoordinate() == y)) {
+			if ((currentTile.getxCoordinate() == x) && (currentTile.getyCoordinate() == y)) {
 				// Set the state of the targeted tile to "HIT"
 				currentTile.setState(ShipTile.HIT);
 				// Update the 'sunk' state.
