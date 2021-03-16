@@ -82,6 +82,20 @@ public abstract class GameManager {
 			// Wait for opponents shot
 			getEnemyShot();
 		}
+		// When the shot destroyed the opponents last ship, update the map and tell the
+		// user he won. It is important to check destroyedLast Ship first. Destroyed
+		// would also be true if it was destroyed last ship.
+		if (response.contains(MessagePresets.DESTROYEDLASTSHIP)) {
+			map.setFieldHit(shot.getXAsInt(), shot.getYAsInt());
+			System.out.println(map.getMapAsText());
+			System.out.println("Hit\nDestroyed last Ship! \nYou won!");
+			// Close the connections
+			connection.close();
+			// If the user is host, also close the serverSocket
+			if (serverSocket != null) {
+				closeServer(serverSocket);
+			}
+		} else
 		// When the shot destroyed a ship, notify the user, update the map and shoot
 		// again.
 		if (response.contains(MessagePresets.DESTROYED)) {
@@ -93,22 +107,7 @@ public abstract class GameManager {
 			System.out.println(map.getMapAsText());
 			// Shoot another shot
 			fireShot();
-
 		}
-		// When the shot destroyed the opponents last ship, update the map and tell the
-		// user he won.
-		if (response.contains(MessagePresets.DESTROYEDLASTSHIP)) {
-			map.setFieldHit(shot.getXAsInt(), shot.getYAsInt());
-			System.out.println(map.getMapAsText());
-			System.out.println("Hit\nDestroyed last Ship! \nYou won!");
-			// Close the connections
-			connection.close();
-			// If the user is host, also close the serverSocket
-			if (serverSocket != null) {
-				closeServer(serverSocket);
-			}
-		}
-
 	}
 
 	/**
@@ -162,8 +161,6 @@ public abstract class GameManager {
 		}
 	}
 
-	// TODO: MAP IS REVERSED FFS. When I shoot at B3 it shows water at D1.
-	// TODO: Also all shots with A0 cause a crash
 	/**
 	 * Extracts shot coordinates from a message
 	 * 
