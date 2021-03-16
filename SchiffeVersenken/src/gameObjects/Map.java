@@ -39,7 +39,7 @@ public class Map {
 			map += "**" + i;
 			// Fill the column
 			for (int j = 0; j < fieldWidth; j++) {
-				map += "|" + fields[i][j].getSymbol();
+				map += "|" + fields[j][i].getSymbol();
 			}
 			map += "|\n";
 		}
