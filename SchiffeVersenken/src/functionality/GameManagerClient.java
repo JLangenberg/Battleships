@@ -9,14 +9,25 @@ import network.SenderUDP;
 import utility.Config;
 import utility.MessagePresets;
 
+/**
+ * Extension of gameManager. Handles all communication and gameplay features.
+ * 
+ * @author Julius Langenberg, AH811
+ *
+ */
 public class GameManagerClient extends GameManager {
-	
+
 	@Override
+	/**
+	 * Establishes a connection by searching for a host and establishing a
+	 * connection with the host.
+	 */
 	public void establishConnection(Map map, ShipManager sm) {
 		// Get the ShipManager and the Map for the following game.
 		this.map = map;
 		this.sm = sm;
-		// Listen for hosts searching a game. Stops here until fitting response was found.
+		// Listen for hosts searching a game. Stops here until fitting response was
+		// found.
 		Message message = ListenerUDP.getListener().listenForKeyword(MessagePresets.SEARCHV1);
 		// Notify the host that we want to play
 		SenderUDP.getSender().sendMessage(message.getSender(), MessagePresets.FOUND);

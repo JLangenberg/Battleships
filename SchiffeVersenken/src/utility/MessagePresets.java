@@ -1,7 +1,7 @@
 package utility;
 
 /**
- * Contains all the messages neccessary for communication
+ * Contains all the messages necessary for communication
  * 
  * @author Julius Langenberg, AH811
  *

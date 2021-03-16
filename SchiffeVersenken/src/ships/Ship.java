@@ -53,18 +53,18 @@ public abstract class Ship {
 		Point pointBehindRootLeft;
 		Point pointBehindRootRight;
 		Point pointFront;
-
+		//TODO: Put these things into separate methods maybe?
 		if (direction == 1) {
 			// NORTH
 
 			// The point behind the root, bordering the rear
-			pointBehindRoot = new Point(xRoot, yRoot - 1);
+			pointBehindRoot = new Point(xRoot, yRoot + 1);
 			// The point on the left of the point behind the root.
 			pointBehindRootLeft = new Point(xRoot - 1, yRoot - 1);
 			// The point on the right of the point behind the root.
-			pointBehindRootRight = new Point(xRoot + 1, yRoot - 1);
+			pointBehindRootRight = new Point(xRoot + 1, yRoot + 1);
 			// The point that borders the front end of the ship
-			pointFront = new Point(xRoot, yRoot + length);
+			pointFront = new Point(xRoot, yRoot - length);
 
 			for (int i = 1; i < length + 1; i++) {
 				// Get the bordering point in the direction of the ship, left side
@@ -83,9 +83,9 @@ public abstract class Ship {
 			// The point behind the root, bordering the rear
 			pointBehindRoot = new Point(xRoot - 1, yRoot);
 			// The point on the left of the point behind the root.
-			pointBehindRootLeft = new Point(xRoot - 1, yRoot + 1);
+			pointBehindRootLeft = new Point(xRoot - 1, yRoot - 1);
 			// The point on the right of the point behind the root.
-			pointBehindRootRight = new Point(xRoot - 1, yRoot - 1);
+			pointBehindRootRight = new Point(xRoot - 1, yRoot + 1);
 			// The point that borders the front end of the ship
 			pointFront = new Point(xRoot + length, yRoot);
 
@@ -104,13 +104,13 @@ public abstract class Ship {
 			// Get all the points at the front and back of the ship
 
 			// The point behind the root, bordering the rear
-			pointBehindRoot = new Point(xRoot, yRoot + 1);
+			pointBehindRoot = new Point(xRoot, yRoot - 1);
 			// The point on the left of the point behind the root.
-			pointBehindRootLeft = new Point(xRoot + 1, yRoot + 1);
+			pointBehindRootLeft = new Point(xRoot + 1, yRoot - 1);
 			// The point on the right of the point behind the root.
-			pointBehindRootRight = new Point(xRoot - 1, yRoot + 1);
+			pointBehindRootRight = new Point(xRoot - 1, yRoot - 1);
 			// The point that borders the front end of the ship
-			pointFront = new Point(xRoot, yRoot - length);
+			pointFront = new Point(xRoot, yRoot + length);
 
 			for (int i = 1; i < length + 1; i++) {
 				// Get the bordering point in the direction of the ship, left side
@@ -129,9 +129,9 @@ public abstract class Ship {
 			// The point behind the root, bordering the rear
 			pointBehindRoot = new Point(xRoot + 1, yRoot);
 			// The point on the left of the point behind the root.
-			pointBehindRootLeft = new Point(xRoot + 1, yRoot - 1);
+			pointBehindRootLeft = new Point(xRoot + 1, yRoot + 1);
 			// The point on the right of the point behind the root.
-			pointBehindRootRight = new Point(xRoot + 1, yRoot + 1);
+			pointBehindRootRight = new Point(xRoot + 1, yRoot - 1);
 			// The point that borders the front end of the ship
 			pointFront = new Point(xRoot - length, yRoot);
 
@@ -172,11 +172,11 @@ public abstract class Ship {
 			// Current point to add
 			Point point;
 			if (direction == 1) {
-				point = new Point(xRoot, yRoot + i);
+				point = new Point(xRoot, yRoot - i);
 			} else if (direction == 2) {
 				point = new Point(xRoot + i, yRoot);
 			} else if (direction == 3) {
-				point = new Point(xRoot, yRoot - i);
+				point = new Point(xRoot, yRoot + i);
 			} else if (direction == 4) {
 				point = new Point(xRoot - i, yRoot);
 			} else {
@@ -197,23 +197,42 @@ public abstract class Ship {
 		return shipPoints;
 	}
 
-	public void updateIsSunk() {
+	/**
+	 * Checks if all tiles of the ship are sunk and changes isSunk accordingly
+	 */
+	protected void updateIsSunk() {
+		// Default to true
 		boolean sunk = true;
+		// Loop through all tiles
 		for (int i = 0; i < shipTiles.size(); i++) {
+			// Check if there is a tile that is not sunk yet
 			if (shipTiles.get(i).getState() == ShipTile.NOTHIT) {
+				// If yes, the ship is not sunk
 				sunk = false;
 			}
 		}
 		this.isSunk = sunk;
 	}
 
+	/**
+	 * Checks if a ship has a tile at the coordinates handed in
+	 * 
+	 * @param x The x coordinate to check
+	 * @param y The y coordinate to check
+	 * @return Whether or not the ship has a tile at P(x, y)
+	 */
 	public boolean hasTileAtPoint(int x, int y) {
+		// Loop through all tiles
 		for (int i = 0; i < shipTiles.size(); i++) {
+			// Get the current tile
 			ShipTile currentTile = shipTiles.get(i);
+			// Check if it is at the wanted coordinates
 			if ((currentTile.getxCoordinate() == x) && (currentTile.getxCoordinate() == y)) {
+				// If yes, return true
 				return true;
 			}
 		}
+		// If no match was found, return false
 		return false;
 	}
 

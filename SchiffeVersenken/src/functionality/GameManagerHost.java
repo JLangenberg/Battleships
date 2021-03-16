@@ -10,11 +10,19 @@ import network.Message;
 import network.SenderUDP;
 import utility.MessagePresets;
 
+/**
+ * Extension of gameManager. Handles all communication and gameplay features.
+ * 
+ * @author Julius Langenberg, AH811
+ *
+ */
 public class GameManagerHost extends GameManager {
-	// ASKTEACHER: What should I do when I don't get an ACK back? Can I wait or
-	// something like this?
-	
+
 	@Override
+	/**
+	 * Establishes a connection by broadcasting a message searching for clients and
+	 * hosting creating a server socket for the client to connect to.
+	 */
 	public void establishConnection(Map map, ShipManager sm) {
 		// Get the ShipManager and the Map for the following game.
 		this.map = map;
