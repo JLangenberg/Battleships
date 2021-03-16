@@ -29,7 +29,6 @@ public class ShipManager {
 	 * @return 0 = Water, 1 = Hit, 2 = Destroyed, 3 = DestroyedLastShip
 	 */
 	public int shootShip(Shot shot) {
-
 		// Check if the shot hits
 		boolean shotHits = false;
 		// The point that is currently being compared. After the loop, it contains the
@@ -46,13 +45,14 @@ public class ShipManager {
 				break;
 			}
 		}
-
+		System.out.println("Determined that shot hits. Now checking where.");
 		if (shotHits) {
 			// Loop through all ships
 			for (int i = 0; i < ships.size(); i++) {
 				// Check if the current ship has a tile at the place that is being targeted
 				if (ships.get(i).hasTileAtPoint(shot.getXAsInt(), shot.getYAsInt())) {
 					// If yes, set the corresponding tile of this ship to hit
+					System.out.println("Current ship has tiles");
 					Ship shotShip = ships.get(i);
 					// "Shoot" the ship and get whether or not it was sunk.
 					boolean isDestroyed = shotShip.shootShip(shot.getXAsInt(), shot.getYAsInt());
