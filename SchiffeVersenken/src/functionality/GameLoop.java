@@ -31,15 +31,13 @@ public class GameLoop {
 		System.out.println("Welcome to Battleships.");
 		// Create the map for the user to keep track of his shots
 		Map map = new Map();
-		// Create the ship manager for the user to place his ships in.
-		ShipManager sm = new ShipManager();
-		// Place a few ships for quick testing.
-		// GameLoop.demoShips(sm);
 		// Initialize the UDP-Listener and UDP-Sender
 		GameLoop.initUDPCommunication();
 		// Create a new game Loop tp access GameLoop's methods
 		GameLoop gameLoop = new GameLoop();
-		gameLoop.shipSetupMenu();
+		// Create the ship manager for the user to place his ships in. Then make the
+		// user place his ships.
+		ShipManager sm = gameLoop.shipSetupMenu();
 		// Let the user choose between being Host or Client
 		String choice = gameLoop.inputString("Menu:\nHost: 0 \nClient: 1 or else");
 		// Create a gameManager and start the game.
