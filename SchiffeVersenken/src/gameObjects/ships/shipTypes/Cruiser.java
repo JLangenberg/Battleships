@@ -1,8 +1,15 @@
-package ships.shipTypes;
+package gameObjects.ships.shipTypes;
 
-import ships.Ship;
+import gameObjects.ships.Ship;
 
+/**
+ * A ship with the attributes of a cruiser
+ * 
+ * @author Julius Langenberg, AH811
+ *
+ */
 public class Cruiser extends Ship {
+	
 	public Cruiser(int xRoot, int yRoot, int direction) {
 		shipId = 2;
 		length = 4;

@@ -20,11 +20,18 @@ public class Field {
 	 * int = 2
 	 */
 	public static final int HIT = 2;
-
+	// The state of this field, default is unkwown.
 	private int fieldState = Field.UNKNOWN;
 	// The x and y position of this field
 	private int[] position = new int[2];
 
+	/**
+	 * Gets a symbol that represents the state of this field. Used for assembling a
+	 * map.
+	 * 
+	 * @return A String that indicates the state of the field. Blank = unkown, ~ =
+	 *         water, + = hit
+	 */
 	public String getSymbol() {
 		if (fieldState == Field.UNKNOWN) {
 			return " ";

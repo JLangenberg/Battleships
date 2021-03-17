@@ -1,10 +1,19 @@
-package gameObjects;
+package functionality;
 
 import java.util.ArrayList;
 
-import ships.Ship;
+import gameObjects.Point;
+import gameObjects.Shot;
+import gameObjects.ships.Ship;
 import utility.Config;
 
+/**
+ * Manages all functionality related to ships, placing ships, shooting ships,
+ * checking if they are sunk and giving a map
+ * 
+ * @author Julius Langenberg, AH811
+ *
+ */
 public class ShipManager {
 	// The list of forbidden points no ship should be placed on, since there is a
 	// ship there.
@@ -23,9 +32,11 @@ public class ShipManager {
 	private int[] amountOfShips = new int[] { 0, 0, 0, 0 };
 
 	/**
+	 * Shoot a ship at the given coordinates. Check and return if it did (not) hit
+	 * or destroy. Then change the ship tiles if a ship was shot.
 	 * 
-	 * @param shotX
-	 * @param shotY
+	 * @param shotX The x Coordinates of the shot
+	 * @param shotY The y Coordinates of the shot
 	 * @return 0 = Water, 1 = Hit, 2 = Destroyed, 3 = DestroyedLastShip
 	 */
 	public int shootShip(Shot shot) {
@@ -134,7 +145,6 @@ public class ShipManager {
 			shipPoints.add(shipFields.get(i));
 		}
 
-		System.out.println("Successfully placed ship with ID: " + ship.getShipId());
 		// Add to the number of ships of the current shipType
 		amountOfShips[ship.getShipId()]++;
 		// Add the ship to the list of ships in the game
@@ -147,9 +157,9 @@ public class ShipManager {
 	 * Takes in two ArrayLists<Point> and checks if they contain one or more points
 	 * that are the same.
 	 * 
-	 * @param pointListA
-	 * @param pointListB
-	 * @return
+	 * @param pointListA The first ArrayList to compare
+	 * @param pointListB The second ArrayList to compare
+	 * @return True = they have some overlap. False = there is no overlap.
 	 */
 	private boolean isOverlapping(ArrayList<Point> pointListA, ArrayList<Point> pointListB) {
 		// Check if none of the points are forbidden
@@ -161,7 +171,7 @@ public class ShipManager {
 				Point pointB = pointListB.get(i);
 				// Check if the current pointA equals the current PointB
 				if ((pointB.getX() == pointA.getX()) && (pointB.getY() == pointA.getY())) {
-					// If yes, theres an overlap
+					// If yes, there is an overlap
 					return true;
 				}
 			}
@@ -172,7 +182,7 @@ public class ShipManager {
 	/**
 	 * Draws all ships of the player on this client on a map.
 	 * 
-	 * @return
+	 * @return The map as a string
 	 */
 	public String getShipMap() {
 		int fieldHeight = 10;

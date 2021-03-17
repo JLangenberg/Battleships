@@ -1,8 +1,19 @@
 package gameObjects;
 
+/**
+ * The map that keeps track of all shots this client made and what the result
+ * was. 10*10 Field, each being able to be in the state of "unknown", "hit" or
+ * "water"
+ * 
+ * @author Julius Langenberg, AH811
+ *
+ */
 public class Map {
+	// The height of the playing field
 	int fieldHeight = 10;
+	// The width of the playing field
 	int fieldWidth = 10;
+	// The array that stores the fields
 	private Field[][] fields = new Field[fieldHeight][fieldWidth];
 
 	/**
@@ -16,10 +27,22 @@ public class Map {
 		}
 	}
 
+	/**
+	 * Sets the field at the given coordinates to Hit-State
+	 * 
+	 * @param x of the field
+	 * @param y of the field
+	 */
 	public void setFieldHit(int x, int y) {
 		fields[x][y].setFieldState(Field.HIT);
 	}
 
+	/**
+	 * Sets the field at the given coordinates to Water-State
+	 * 
+	 * @param x of the field
+	 * @param y of the field
+	 */
 	public void setFieldWater(int x, int y) {
 		fields[x][y].setFieldState(Field.WATER);
 	}

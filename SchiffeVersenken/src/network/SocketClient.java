@@ -18,7 +18,7 @@ import java.net.UnknownHostException;
  * @author Julius Langenberg
  *
  */
-public class Client extends SocketConnection {
+public class SocketClient extends SocketConnection {
 	// The Socket that connects to the server
 	private Socket clientConnection = new Socket();
 
@@ -38,7 +38,7 @@ public class Client extends SocketConnection {
 	 * @param hostIn The host address that the connection should be made with
 	 * @param portIn The Port that should be connected with.
 	 */
-	public Client(String hostIn, int portIn) {
+	public SocketClient(String hostIn, int portIn) {
 
 		// Create the connection with the server
 		try {

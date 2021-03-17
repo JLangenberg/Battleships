@@ -7,7 +7,6 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 
 import gameObjects.Map;
-import gameObjects.ShipManager;
 import gameObjects.Shot;
 import network.SocketConnection;
 import utility.MessagePresets;
@@ -26,10 +25,10 @@ public abstract class GameManager {
 	SocketConnection connection;
 
 	/**
-	 * Establishes a connection.
+	 * Establishes a connection with an opponent.
 	 * 
-	 * @param map
-	 * @param sm
+	 * @param map Used in further gameplay
+	 * @param sm  Used in further gameplay
 	 */
 	public abstract void establishConnection(Map map, ShipManager sm);
 
@@ -124,6 +123,8 @@ public abstract class GameManager {
 		int response = sm.shootShip(shot);
 		// MISS
 		if (response == 0) {
+			// TODO: I think these could be put into a method, mostly. At least the sending
+			// and syso
 			// Say miss, show map, tell opponent, and shoot own shot
 			System.out.println("Incoming shot missed. " + shot.getShotAsMessage());
 			System.out.println(sm.getShipMap());
@@ -164,8 +165,8 @@ public abstract class GameManager {
 	/**
 	 * Extracts shot coordinates from a message
 	 * 
-	 * @param message
-	 * @return
+	 * @param message Message to get coordinates from
+	 * @return The Shot object containing the shot coordinates
 	 */
 	private Shot getShotFromMessage(String message) {
 		// The arrays to compare to

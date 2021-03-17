@@ -6,15 +6,28 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+/**
+ * The object to use for UDP Listening. Is a singleton
+ * 
+ * @author Julius Langenberg, AH811
+ *
+ */
 public class ListenerUDP {
-
-	private DatagramSocket datagramSocket;
-	InetAddress ownAddress = null;
+	// This singleton listener
 	private static volatile ListenerUDP listener;
+	// The datagram socket used for listening
+	private DatagramSocket datagramSocket;
+	// Own address used for filtering out own messages
+	InetAddress ownAddress = null;
 
 	public ListenerUDP() {
 	}
 
+	/**
+	 * Singleton getter
+	 * 
+	 * @return Instance of listener
+	 */
 	public static ListenerUDP getListener() {
 
 		if (listener == null) {
@@ -27,18 +40,45 @@ public class ListenerUDP {
 		return listener;
 	}
 
-	public DatagramSocket getDatagramSocket() {
-		return datagramSocket;
+	/**
+	 * Listens for a message with a specific keyword, then returns the message
+	 * 
+	 * @param keyword The keyword to look out for
+	 * @return The got message containing the keyword
+	 */
+	public Message listenForKeyword(String keyword) {
+		// A loop that only ends when a relevant message was heard.
+		while (true) {
+			// Receive a packet
+			DatagramPacket datagramPacket = getPackage();
+			// Check if it contains the keyword
+			boolean containsKeyword = containsKeyword(datagramPacket, keyword);
+			// Check if the received message contains keywords and is not send by the client
+			// itself.
+			if (containsKeyword) {
+				// Returns the received message
+				return new Message(datagramPacket.getAddress(), datagramPacket.getData().toString());
+			}
+		}
 	}
 
-	public void setDatagramSocket(DatagramSocket datagramSocket) {
-		this.datagramSocket = datagramSocket;
-		// Get the clients own address to filter out own messages.
-		try {
-			ownAddress = InetAddress.getLocalHost();
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
+	/**
+	 * Takes in a packet and a keyword, then checks if the packet-message contains
+	 * the keyword.
+	 * 
+	 * @param datagramPacket The packet to check
+	 * @param keyword        The keyword to look for
+	 * @return True: packet contains keyword. False: Does not contain keyword.
+	 */
+	private boolean containsKeyword(DatagramPacket datagramPacket, String keyword) {
+		// Get the contents of the message
+		String message = new String(datagramPacket.getData());
+
+		// Check if the received message contains keywords itself.
+		if (message.contains(keyword)) {
+			return true;
 		}
+		return false;
 	}
 
 	/**
@@ -59,106 +99,17 @@ public class ListenerUDP {
 		return datagramPacket;
 	}
 
-	/**
-	 * Listens for a message and hands it to the UI or something...
-	 */
-	public Message listenForKeyword(String keyword) {
-		// A loop that only ends when a relevant message was heard.
-		while (true) {
-			// Receive a packet
-			DatagramPacket datagramPacket = getPackage();
-			// Check if it contains the keyword
-			boolean containsKeyword = containsKeyword(datagramPacket, keyword);
-			// Check if the received message contains keywords and is not send by the client
-			// itself.
-			if (containsKeyword) {
-				// Returns the received message
-				return new Message(datagramPacket.getAddress(), datagramPacket.getData().toString());
-			}
-		}
+	public DatagramSocket getDatagramSocket() {
+		return datagramSocket;
 	}
 
-	/**
-	 * Listens for a message by a specific sender and hands it to the UI or
-	 * something...
-	 */
-	public Message listenForKeyword(String keyword, InetAddress sender) {
-		// A loop that only ends when a relevant message was heard.
-		while (true) {
-			// Receive a packet
-			DatagramPacket datagramPacket = getPackage();
-			// Check if it contains the keyword
-			boolean containsKeyword = containsKeyword(datagramPacket, keyword);
-			// Check if the received message contains keywords and is sent by the wanted
-			// client
-			if (containsKeyword && isSentBySender(datagramPacket, sender)) {
-				// Returns the received message
-				return new Message(datagramPacket.getAddress(), datagramPacket.getData().toString());
-			}
+	public void setDatagramSocket(DatagramSocket datagramSocket) {
+		this.datagramSocket = datagramSocket;
+		// Get the clients own address to filter out own messages.
+		try {
+			ownAddress = InetAddress.getLocalHost();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
 		}
-	}
-
-	private boolean containsKeyword(DatagramPacket datagramPacket, String keyword) {
-		// Get the contents of the message
-		String message = new String(datagramPacket.getData());
-
-		// Check if the received message contains keywords itself.
-		if (message.contains(keyword)) {
-			return true;
-		}
-		return false;
-	}
-
-	private boolean containsKeyword(DatagramPacket datagramPacket, String[] keywords) {
-		// Check the sender of this message, get all the data needed
-		InetAddress senderAddress = datagramPacket.getAddress();
-		// Get the contents of the message
-		String message = new String(datagramPacket.getData());
-
-		// Check if the received message contains keywords and is not send by this
-		// client
-		// itself.
-		for (int i = 0; i < keywords.length; i++) {
-			if (message.contains(keywords[i]) && !(senderAddress.toString().contains(ownAddress.toString()))) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * Overload method of listenForKeywords. This method listens for a list of
-	 * keywords by a specific sender and returns the message.
-	 * 
-	 * @param keywords The keywords to filter for
-	 * @param sender   The wanted sender of the message
-	 * @return The message that was received.
-	 */
-	public Message listenForKeywords(String[] keywords, InetAddress sender) {
-		// A loop that only ends when a relevant message was heard.
-		while (true) {
-			// Receive a packet
-			DatagramPacket datagramPacket = getPackage();
-			// Check if it contains the keyword and was sent by the correct sender.
-			boolean containsKeyword = containsKeyword(datagramPacket, keywords);
-			boolean isFromSender = isSentBySender(datagramPacket, sender);
-
-			// Check if the received message contains keywords and is not send by the client
-			// itself.
-			if (containsKeyword && isFromSender) {
-				System.out.println("Message got:\n");
-				System.out.println(datagramPacket.getData());
-				System.out.println(datagramPacket.getAddress().toString());
-				// Returns the received message
-				return new Message(datagramPacket.getAddress(), datagramPacket.getData().toString());
-			}
-		}
-	}
-
-	private boolean isSentBySender(DatagramPacket datagramPacket, InetAddress sender) {
-		if (datagramPacket.getAddress() == sender) {
-			return true;
-		}
-		return false;
 	}
 }

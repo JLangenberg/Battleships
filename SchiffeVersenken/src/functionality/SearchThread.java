@@ -12,8 +12,8 @@ import utility.MessagePresets;
  *
  */
 public class SearchThread implements Runnable {
-
-	private boolean keepRunning = true;
+	// The message that decides if the thread keeps on running. As long as its
+	// content equals "Run", the thread will run
 	volatile Message message = null;
 
 	public SearchThread(Message message) {
@@ -30,18 +30,10 @@ public class SearchThread implements Runnable {
 			sender.broadcastMessage(MessagePresets.SEARCHV1);
 			System.out.println("Searching...");
 			try {
-				Thread.sleep(8000);// Wait 5000 ms = 5 sek
+				Thread.sleep(8000);// Wait 8000 ms = 8 sek
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
-	}
-
-	public boolean isKeepRunning() {
-		return keepRunning;
-	}
-
-	public void setKeepRunning(boolean keepRunning) {
-		this.keepRunning = keepRunning;
 	}
 }

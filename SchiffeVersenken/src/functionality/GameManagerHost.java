@@ -3,11 +3,10 @@ package functionality;
 import java.net.ServerSocket;
 
 import gameObjects.Map;
-import gameObjects.ShipManager;
-import network.Host;
 import network.ListenerUDP;
 import network.Message;
 import network.SenderUDP;
+import network.SocketHost;
 import utility.MessagePresets;
 
 /**
@@ -46,9 +45,10 @@ public class GameManagerHost extends GameManager {
 
 		// Fill the server socket and start the server
 		ServerSocket serverSocket = startServer();
-		connection = new Host(serverSocket);
+		connection = new SocketHost(serverSocket);
 
-		// When everything is set up, shoot the first shot
+		// When everything is set up, shoot the first shot. Further moves are handled
+		// via recursion.
 		fireShot();
 	}
 }

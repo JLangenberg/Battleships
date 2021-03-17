@@ -16,7 +16,7 @@ import java.net.Socket;
  * @author Julius Langenberg
  *
  */
-public class Host extends SocketConnection {
+public class SocketHost extends SocketConnection {
 	// The accepted client connection
 	Socket acceptedConnection = null;
 	// The output stream and stream writers to send messages to the client
@@ -35,7 +35,7 @@ public class Host extends SocketConnection {
 	 * 
 	 * @param serverSocket
 	 */
-	public Host(ServerSocket serverSocket) {
+	public SocketHost(ServerSocket serverSocket) {
 
 		// Accept and wait for a client
 		try {
@@ -122,7 +122,5 @@ public class Host extends SocketConnection {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 	}
-
 }
