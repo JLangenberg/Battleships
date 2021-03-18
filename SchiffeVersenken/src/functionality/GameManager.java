@@ -123,36 +123,30 @@ public abstract class GameManager {
 		int response = sm.shootShip(shot);
 		// MISS
 		if (response == 0) {
-			// TODO: I think these could be put into a method, mostly. At least the sending
-			// and syso
 			// Say miss, show map, tell opponent, and shoot own shot
-			System.out.println("Incoming shot missed. " + shot.getShotAsMessage());
-			System.out.println(sm.getShipMap());
-			connection.sendMessage(MessagePresets.MISS + "," + shot.getShotAsMessage());
+			incomingShotResponse("Incoming shot missed. " + shot.getShotAsMessage(),
+					MessagePresets.MISS + "," + shot.getShotAsMessage());
 			fireShot();
 		}
 		// HIT
 		else if (response == 1) {
 			// Say hit, show map, tell opponent, and wait for next shot
-			System.out.println("Hit! " + shot.getShotAsMessage() + " Waiting for next shot.");
-			System.out.println(sm.getShipMap());
-			connection.sendMessage(MessagePresets.HIT + "," + shot.getShotAsMessage());
+			incomingShotResponse("Hit! " + shot.getShotAsMessage() + " Waiting for next shot.",
+					MessagePresets.HIT + "," + shot.getShotAsMessage());
 			getEnemyShot();
 		}
 		// DESTROYED
 		else if (response == 2) {
-			// say destroyed, show map, tell opponent, and wait for next shot
-			System.out.println("Hit! " + shot.getShotAsMessage() + " Waiting for next shot.");
-			System.out.println(sm.getShipMap());
-			connection.sendMessage(MessagePresets.DESTROYED + "," + shot.getShotAsMessage());
+			// Say destroyed, show map, tell opponent, and wait for next shot
+			incomingShotResponse("Hit! " + shot.getShotAsMessage() + " Waiting for next shot.",
+					MessagePresets.DESTROYED + "," + shot.getShotAsMessage());
 			getEnemyShot();
 		}
 		// DESTROYED LAST SHIP
 		else if (response == 3) {
-			// say destroyed last ship, show map, tell opponent, and do game over.
-			connection.sendMessage(MessagePresets.DESTROYEDLASTSHIP + "," + shot.getShotAsMessage());
-			System.out.println(sm.getShipMap());
-			System.out.println("Hit! " + shot.getShotAsMessage() + " Last Ship was destroyed. \nYou lost!");
+			// Say destroyed last ship, show map, tell opponent, and do game over.
+			incomingShotResponse("Hit! " + shot.getShotAsMessage() + " Last Ship was destroyed. \nYou lost!",
+					MessagePresets.DESTROYEDLASTSHIP + "," + shot.getShotAsMessage());
 			// End the connection.
 			connection.close();
 			// If the user is a host, close the server too.
@@ -160,6 +154,22 @@ public abstract class GameManager {
 				closeServer(serverSocket);
 			}
 		}
+	}
+
+	/**
+	 * Prints consoleOutput to the console, shows the shipMap and sends
+	 * messageForOpponent to the opponent via TCP connection
+	 * 
+	 * @param consoleOutput      String to print to the console
+	 * @param messageForOpponent String to send to the opponent
+	 */
+	private void incomingShotResponse(String consoleOutput, String messageForOpponent) {
+		// Tell the user what happened
+		System.out.println(consoleOutput);
+		// Show the user the current state of the ship map
+		System.out.println(sm.getShipMap());
+		// Tell the opponent what happened
+		connection.sendMessage(messageForOpponent);
 	}
 
 	/**

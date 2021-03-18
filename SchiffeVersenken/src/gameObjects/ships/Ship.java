@@ -98,7 +98,7 @@ public abstract class Ship {
 		Point pointBehindRootLeft;
 		Point pointBehindRootRight;
 		Point pointFront;
-		// TODO: Put these things into separate methods maybe?
+
 		if (direction == 1) {
 			// NORTH
 
